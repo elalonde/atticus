@@ -10,9 +10,8 @@ Features
 
 Installation
 ==========
-* required npm modules: install minimist irc
-
 ``` sh
+npm install minimist irc
 git clone https://github.com/elalonde/atticus
 ```
 
