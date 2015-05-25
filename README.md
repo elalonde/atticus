@@ -13,7 +13,7 @@ Installation
 * required npm modules: install minimist irc
 
 ``` sh
-git clone REPOPATH
+git clone https://github.com/elalonde/atticus
 ```
 
 Usage
