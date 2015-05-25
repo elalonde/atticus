@@ -1,0 +1,28 @@
+{
+  "name": "atticus",
+  "version": "0.0.1",
+  "description": "the attic-dwelling irc bot",
+  "main": "atticus.js",
+  "dependencies": {
+    "irc": "^0.3.12",
+    "minimist": "^1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elalonde/atticus.git"
+  },
+  "keywords": [
+    "irc",
+    "atticus"
+  ],
+  "author": "Eric Lalonde (eric@lalonde.com)",
+  "license": "BSD 2-Clause (simplified)",
+  "bugs": {
+    "url": "https://github.com/elalonde/atticus/issues"
+  },
+  "homepage": "https://github.com/elalonde/atticus"
+}
