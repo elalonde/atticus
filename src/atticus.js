@@ -50,6 +50,7 @@ var irc = require("irc");
 var fs = require("fs");
 var tell = require("./tell.js");
 var last = require("./last.js");
+var temp = require("./temp.js");
 var config = {};
 var cmdArgs = parseArgs(argv);
 config = loadConfig(cmdArgs);
@@ -57,10 +58,12 @@ var bot = new irc.Client(config.server, config.botName, config);
 
 tell.init(config, bot);
 last.init(config, bot);
+temp.init(config, bot);
 
 bot.addListener("message", function(speaker, chan, text, message) {
 	tell.handleMessage(speaker, chan, text, message);
 	last.handleMessage(speaker, chan, text, message);
+	temp.handleMessage(speaker, chan, text, message);
 });
 
 bot.addListener('error', function(message) {
