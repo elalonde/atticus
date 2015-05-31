@@ -1,8 +1,4 @@
 // atticus.js - an attic dweller
-var argv = require('minimist')(process.argv.slice(2));
-var irc = require("irc");
-var fs = require("fs");
-var tell = require("./tell.js");
 
 if (typeof String.prototype.startsWith != 'function') {
 	String.prototype.startsWith = function (str) {
@@ -49,20 +45,35 @@ function parseArgs(argv) {
 	return cmdArgs;
 }
 
-function main() {
-	var cmdArgs = parseArgs(argv);
-	var config = loadConfig(cmdArgs);
-	var bot = new irc.Client(config.server, config.botName, config);
+var argv = require('minimist')(process.argv.slice(2));
+var irc = require("irc");
+var fs = require("fs");
+var tell = require("./tell.js");
+var last = require("./last.js");
+var config = {};
+var cmdArgs = parseArgs(argv);
+config = loadConfig(cmdArgs);
+var bot = new irc.Client(config.server, config.botName, config);
 
-	tell.init(config, bot);
+tell.init(config, bot);
+last.init(config, bot);
 
-	bot.addListener("message", function(speaker, chan, text, message) {
-		tell.check(speaker, chan, text, message);
-	});
+bot.addListener("message", function(speaker, chan, text, message) {
+	tell.handleMessage(speaker, chan, text, message);
+	last.handleMessage(speaker, chan, text, message);
+});
 
-	bot.addListener('error', function(message) {
-		console.log('error: ', message);
-	});
-}
+bot.addListener('error', function(message) {
+	console.log('error: ', message);
+});
 
-main();
+bot.addListener("quit", function(nick, reason, channels, message) {
+	last.handleQuit(nick, reason, channels, message);
+});
+
+setInterval(function () {
+	if(fs.existsSync(config.storeDir + "/.reload")) {
+		console.log("Found reload marker; exiting.");
+		process.exit(0);
+	}
+}, 3000);

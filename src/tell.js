@@ -1,3 +1,7 @@
+// tell.js features:
+// !tell <nick> <message>: record a message for <nick>. Messages are delivered
+// when the user speaks in a channel monitored by atticus. Messages are stored
+// persistently until delivered.
 var fs = require("fs");
 var config = {};
 var db = { msgs: [] };
@@ -9,7 +13,7 @@ function debug(text) {
 
 function isAllowed(sender, replyDest, msg) {
 	if(!config.debug && sender == msg.to) {
-		bot.say(replyDest, sender + " you are wrong and should feel bad for being wrong.");
+		bot.say(replyDest, sender + ": you are full of failure and reget.");
 		return 0;
 	}
 
@@ -67,14 +71,14 @@ function saveMsg(sender, replyDest, input) {
 }
 
 function storeDB() {
-	var file = config.storeDir + "/db";
+	var file = config.storeDir + "/tell.db";
 	var str = JSON.stringify(db, null, 4);
 	fs.writeFileSync(file, str);
 	console.log("Stored " + db.msgs.length + " entries in " + file);
 }
 
 function loadDB() {
-	var file = config.storeDir + "/db";
+	var file = config.storeDir + "/tell.db";
 	if(fs.existsSync(file)) {
 		db = JSON.parse(fs.readFileSync(file));
 		console.log("Loaded " + db.msgs.length + " message(s) from "+ file + ". ");
@@ -87,7 +91,7 @@ function checkMsgs(speaker, chan) {
 	debug(speaker + " spoke on " + chan + ".");
 
 	for (var i = 0; i < db.msgs.length; i++) {
-		if(speaker == db.msgs[i].to) {
+		if(speaker.toLowerCase() == db.msgs[i].to.toLowerCase()) {
 			msgs.push(db.msgs[i]);
 			db.msgs.splice(i, 1);
 		}
@@ -119,7 +123,7 @@ exports.init = function(conf, b) {
 	loadDB();
 }
 
-exports.check = function(speaker, chan, text, message) {
+exports.handleMessage = function(speaker, chan, text, message) {
 	var isPM;
 	var replyDest;
 
