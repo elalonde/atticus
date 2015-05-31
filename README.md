@@ -12,6 +12,8 @@ Features
 * !temp<br />
   Display current temperature sensor readings for those which report via sysctl(8).
 
+All features may also be accessed privately by messaging the bot directly.
+
 Installation
 ==========
 ``` sh
