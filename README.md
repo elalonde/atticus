@@ -7,6 +7,10 @@ Features
 ========
 * !tell \<nick\> \<message\><br /> 
   Record a message for \<nick\>. Messages are delivered when the user speaks in a channel monitored by atticus. Messages are stored persistently until delivered.
+* !last \<nick\><br />
+  Display the last statement made by \<nick\>. If \<nick\> is not online, the time elapsed since user quit is also printed.
+* !temp<br />
+  Display current temperature sensor readings for those which report via sysctl(8).
 
 Installation
 ==========
