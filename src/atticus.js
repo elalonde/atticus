@@ -76,7 +76,10 @@ bot.addListener("quit", function(nick, reason, channels, message) {
 
 setInterval(function () {
 	if(fs.existsSync(config.storeDir + "/.reload")) {
-		console.log("Found reload marker; exiting.");
+		for(var i = 0; i < config.channels.length; i++) {
+			bot.say(config.channels[i], "Received request to restart. Goodbye.");
+		}
+		console.log("Received request to restart. Goodbye.");
 		process.exit(0);
 	}
 }, 3000);

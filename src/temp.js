@@ -23,6 +23,11 @@ exports.handleMessage = function(speaker, chan, text, message) {
 	var file = config.storeDir + "/.temperatures.cache";
 	var raw;
 	var lines;
+	var dest = chan;
+
+	// support replying via /msg
+	if(message.args[0] == config.botName)
+		dest = message.nick;
 
 	if(text.startsWith("!temp")) {
 		raw = fs.readFileSync(file);
@@ -31,7 +36,7 @@ exports.handleMessage = function(speaker, chan, text, message) {
 			var device = lines[i].replace(/^hw\.sensors\.(.*\.temp[0-9]).*/, "$1");
 			var temp = parseFloat(lines[i].replace(/.*=(.*) degC.*/, "$1")).toFixed(2);
 			var tempF = (temp * 9 / 5 + 30).toFixed(2);
-			bot.say(chan, device + ": " + tempF  + " F (" + temp + " C).");
+			bot.say(dest, device + ": " + tempF  + " F (" + temp + " C).");
 		}
 	}
 }

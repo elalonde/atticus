@@ -38,6 +38,21 @@ function parseArgs(argv) {
 	return cmdArgs;
 }
 
+function isOnline(chan, nick) {
+	var rv = -1;
+	var online = bot.chans[chan].users.hasOwnProperty(nick);
+
+	if(online) {
+		console.log(nick + " is online");
+		rv = 1;
+	} else {
+		console.log(nick + " is offline" );
+		rv = 0;
+	}
+
+	return rv;
+}
+
 var argv = require('minimist')(process.argv.slice(2));
 var irc = require("irc");
 var fs = require("fs");
@@ -50,6 +65,18 @@ bot.addListener("quit", function(nick, reason, channels, message) {
 	if(config.monitored.indexOf(nick) > -1) {
 		bot.say(config.devchan, nick + " has quit. Kicking off restart.");
 		fs.closeSync(fs.openSync(trigger, 'w'));
+	}
+});
+
+bot.addListener("join", function(channel, nick, message) {
+	if(config.botName == nick) {
+		for(var i =0; i < config.monitored.length; i++) {
+			if(0 == isOnline(channel, config.monitored[i])) {
+				bot.say(config.devchan, config.monitored[i]
+					+ " is not online. Kicking off restart.");
+				fs.closeSync(fs.openSync(trigger, 'w'));
+			}
+		}
 	}
 });
 
